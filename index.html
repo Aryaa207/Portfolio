@@ -6,1353 +6,1347 @@
 <title>Aryaa Vijay — Aerospace Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   RESET + TOKENS
-   ============================================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --bg:       #0b0c0e;
-  --surface:  #111318;
-  --white:    #ede9e0;
-  --mid:      rgba(237,233,224,0.5);
-  --dim:      rgba(237,233,224,0.28);
-  --line:     rgba(237,233,224,0.09);
-  --gold:     #c9a96e;
-  --gold-dim: rgba(201,169,110,0.35);
-  --red:      #c0392b;
+/* ── RESET ───────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:#000;
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;}
+
+/* ── HERO ────────────────────────────────────────── */
+#hero{
+  position:relative;
+  width:100%;
+  height:100vh;
+  min-height:640px;
+  background:#000;
+  overflow:hidden;
 }
 
-html { scroll-behavior: smooth; font-size: 16px; }
-
-body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
-  overflow-x: hidden;
-  cursor: default;
+#hero-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:1;
 }
 
-/* ============================================================
-   NAV
-   ============================================================ */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 26px 56px;
-  background: linear-gradient(to bottom, rgba(11,12,14,0.9), transparent);
-  backdrop-filter: blur(2px);
-}
-
-.nav-logo {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  font-weight: 300;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
-  opacity: 0;
-  animation: rise 0.7s ease 0.1s forwards;
-}
-
-.nav-links {
-  display: flex;
-  gap: 36px;
-  list-style: none;
-  opacity: 0;
-  animation: rise 0.7s ease 0.3s forwards;
-}
-
-.nav-links a {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--mid);
-  text-decoration: none;
-  transition: color 0.25s;
-}
-.nav-links a:hover { color: var(--white); }
-
-/* ============================================================
-   HERO
-   ============================================================ */
-#hero {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  min-height: 600px;
-  overflow: hidden;
-  background: var(--bg);
-  display: flex;
-  align-items: flex-end;
-}
-
-/* Full-bleed 3D canvas behind everything */
-#hero-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-/* Gradient that makes text pop over the 3D */
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
+/* Left gradient — makes text readable */
+.hero-veil{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
   background:
-    linear-gradient(to right, rgba(11,12,14,0.92) 0%, rgba(11,12,14,0.55) 55%, rgba(11,12,14,0.1) 100%),
-    linear-gradient(to top, rgba(11,12,14,0.85) 0%, transparent 45%);
+    linear-gradient(to right,
+      rgba(0,0,0,.85) 0%,
+      rgba(0,0,0,.55) 45%,
+      rgba(0,0,0,.10) 100%),
+    linear-gradient(to top,
+      rgba(0,0,0,.80) 0%,
+      transparent 40%);
 }
 
-/* Text content */
-.hero-content {
-  position: relative;
-  z-index: 10;
-  padding: 0 56px 80px;
-  max-width: 680px;
-  width: 100%;
+/* All hero text sits here */
+.hero-text{
+  position:absolute;
+  inset:0;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:0 72px;
+  padding-bottom:120px; /* space for stats bar */
 }
 
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 22px;
-  opacity: 0;
-  animation: rise 0.7s ease 0.5s forwards;
-}
-.hero-eyebrow-bar { width: 28px; height: 1px; background: var(--gold); flex-shrink: 0; }
-.hero-eyebrow span {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
+.hero-super{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  margin-bottom:20px;
+  opacity:0;
+  animation:up .7s ease .2s forwards;
 }
 
-.hero-name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(68px, 10vw, 148px);
-  line-height: 0.9;
-  letter-spacing: 2px;
-  color: var(--white);
-  margin-bottom: 28px;
+.hero-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(72px,11vw,160px);
+  line-height:.9;
+  letter-spacing:2px;
+  color:#fff;
+  margin-bottom:28px;
 }
-.hero-name .n1 {
-  display: block;
-  opacity: 0;
-  animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.55s forwards;
+.hero-name .l1{
+  display:block;
+  opacity:0;
+  animation:up 1s cubic-bezier(.16,1,.3,1) .3s forwards;
 }
-.hero-name .n2 {
-  display: block;
-  opacity: 0;
-  animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.7s forwards;
-}
-
-.hero-body {
-  font-size: 15px;
-  line-height: 1.8;
-  color: var(--mid);
-  max-width: 440px;
-  margin-bottom: 44px;
-  opacity: 0;
-  animation: rise 0.7s ease 0.9s forwards;
-}
-.hero-body strong { color: var(--white); font-weight: 400; }
-
-.hero-actions {
-  display: flex;
-  gap: 24px;
-  align-items: center;
-  opacity: 0;
-  animation: rise 0.7s ease 1.05s forwards;
+.hero-name .l2{
+  display:block;
+  opacity:0;
+  animation:up 1s cubic-bezier(.16,1,.3,1) .45s forwards;
 }
 
-.btn-solid {
-  display: inline-block;
-  padding: 13px 30px;
-  background: var(--white);
-  color: var(--bg);
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: background 0.25s;
-  white-space: nowrap;
-}
-.btn-solid:hover { background: var(--gold); }
-
-.btn-ghost {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--mid);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: color 0.25s;
-  white-space: nowrap;
-}
-.btn-ghost:hover { color: var(--white); }
-.btn-ghost .a { display: inline-block; transition: transform 0.25s; }
-.btn-ghost:hover .a { transform: translateX(4px); }
-
-/* Stats strip — bottom of hero */
-.hero-stats {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  z-index: 10;
-  display: flex;
-  align-items: stretch;
-  border-top: 1px solid var(--line);
-  opacity: 0;
-  animation: rise 0.7s ease 1.2s forwards;
+.hero-divider{
+  width:48px;
+  height:2px;
+  background:#fff;
+  margin-bottom:24px;
+  opacity:0;
+  animation:up .6s ease .65s forwards;
 }
 
-.stat-cell {
-  flex: 1;
-  padding: 18px 0 18px 36px;
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+.hero-desc{
+  font-size:15px;
+  font-weight:300;
+  line-height:1.75;
+  color:rgba(255,255,255,.5);
+  max-width:420px;
+  margin-bottom:44px;
+  opacity:0;
+  animation:up .7s ease .75s forwards;
 }
-.stat-cell:last-child { border-right: none; }
+.hero-desc strong{color:rgba(255,255,255,.85);font-weight:400;}
 
-.stat-n {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 30px;
-  color: var(--white);
-  line-height: 1;
-}
-.stat-l {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  font-weight: 300;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--dim);
+/* Buttons */
+.hero-cta{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  flex-wrap:wrap;
+  opacity:0;
+  animation:up .7s ease .9s forwards;
 }
 
-/* Scroll indicator */
-.scroll-cue {
-  position: absolute;
-  right: 56px;
-  bottom: 88px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  opacity: 0;
-  animation: rise 0.7s ease 1.4s forwards;
+.btn-white{
+  display:inline-block;
+  padding:13px 32px;
+  background:#fff;
+  color:#000;
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:400;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  transition:background .2s,color .2s;
+  white-space:nowrap;
 }
-.scroll-cue span {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--dim);
-  writing-mode: vertical-rl;
-}
-.scroll-cue-line {
-  width: 1px;
-  height: 48px;
-  background: linear-gradient(to bottom, var(--dim), transparent);
-  animation: scroll-bob 2s ease infinite;
-}
-@keyframes scroll-bob { 0%,100%{opacity:.3} 50%{opacity:.9} }
+.btn-white:hover{background:#e0e0e0;}
 
-/* ============================================================
-   PROJECTS SECTION
-   ============================================================ */
-#projects {
-  background: var(--bg);
-  padding: 120px 0 80px;
+.btn-ghost{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:12px 32px;
+  border:1px solid rgba(255,255,255,.3);
+  color:rgba(255,255,255,.55);
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  transition:border-color .2s,color .2s;
+  white-space:nowrap;
 }
+.btn-ghost:hover{border-color:#fff;color:#fff;}
+.btn-ghost .arr{display:inline-block;transition:transform .2s;}
+.btn-ghost:hover .arr{transform:translateX(4px);}
 
-.section-header {
-  padding: 0 56px 64px;
-  display: flex;
-  align-items: baseline;
-  gap: 24px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 0;
+/* Aircraft callout — top right */
+.aircraft-label{
+  position:absolute;
+  top:48px;
+  right:56px;
+  z-index:10;
+  text-align:right;
+  opacity:0;
+  animation:up .7s ease 1.2s forwards;
 }
-.section-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
+.aircraft-label-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:16px;
+  letter-spacing:3px;
+  color:rgba(255,255,255,.7);
 }
-.section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(36px, 5vw, 60px);
-  color: var(--white);
-  letter-spacing: 2px;
+.aircraft-label-line{
+  width:100%;
+  height:1px;
+  background:rgba(255,255,255,.15);
+  margin:8px 0;
 }
-
-/* Each project row — full width, alternating layout */
-.project-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 520px;
-  border-bottom: 1px solid var(--line);
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.project-row.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.project-row.flip { direction: rtl; }
-.project-row.flip > * { direction: ltr; }
-
-/* 3D canvas panel */
-.proj-canvas-wrap {
-  position: relative;
-  background: var(--surface);
-  overflow: hidden;
-}
-.proj-canvas-wrap canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.proj-canvas-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.proj-canvas-wrap.flip-fade .proj-canvas-overlay {
-  background: linear-gradient(to left, var(--bg) 0%, transparent 40%);
-}
-.proj-canvas-wrap .proj-canvas-overlay {
-  background: linear-gradient(to right, var(--bg) 0%, transparent 40%);
+.aircraft-label-spec{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.28);
+  line-height:1.9;
 }
 
-/* Category tag on image */
-.proj-tag {
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  font-weight: 300;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--gold);
-  z-index: 5;
-  background: rgba(11,12,14,0.6);
-  padding: 5px 10px;
-  border: 1px solid var(--gold-dim);
+/* Stats strip — anchored to very bottom */
+.hero-stats{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  z-index:10;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border-top:1px solid rgba(255,255,255,.08);
+  opacity:0;
+  animation:up .7s ease 1.1s forwards;
+}
+.stat{
+  padding:20px 0 20px 40px;
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.stat:last-child{border-right:none;}
+.stat-n{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:34px;
+  color:#fff;
+  line-height:1;
+  display:block;
+}
+.stat-l{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.28);
+  display:block;
+  margin-top:4px;
 }
 
-/* Text panel */
-.proj-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 60px 64px;
-  gap: 0;
+/* ── PROJECTS ─────────────────────────────────────── */
+#projects{background:#000;}
+
+.sec-header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  padding:88px 72px 52px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.sec-eyebrow{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.3);
+  margin-bottom:12px;
+}
+.sec-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,6vw,80px);
+  letter-spacing:2px;
+  color:#fff;
+  line-height:1;
+}
+.sec-count{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:2px;
+  color:rgba(255,255,255,.2);
+  padding-bottom:4px;
 }
 
-.proj-num {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 3px;
-  color: var(--dim);
-  margin-bottom: 18px;
+/* Each project row */
+.prow{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:520px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.prow.visible{opacity:1;transform:translateY(0);}
+.prow.flip{direction:rtl;}
+.prow.flip>*{direction:ltr;}
+
+/* Visual side */
+.pvis{
+  position:relative;
+  background:#0d0d0d;
+  overflow:hidden;
+}
+.pvis canvas{width:100%;height:100%;display:block;}
+.pvis img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  filter:brightness(.7) grayscale(.2);
+  transition:filter .5s,transform .7s;
+}
+.prow:hover .pvis img{filter:brightness(.9) grayscale(0);transform:scale(1.03);}
+
+/* Gradient blend into info panel */
+.pvis .blend-r{
+  position:absolute;top:0;right:0;bottom:0;width:35%;
+  background:linear-gradient(to right,transparent,#000);
+  pointer-events:none;z-index:3;
+}
+.pvis .blend-l{
+  position:absolute;top:0;left:0;bottom:0;width:35%;
+  background:linear-gradient(to left,transparent,#000);
+  pointer-events:none;z-index:3;
 }
 
-.proj-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(32px, 3.5vw, 52px);
-  letter-spacing: 1.5px;
-  line-height: 1.0;
-  color: var(--white);
-  margin-bottom: 20px;
+/* Top accent stripe */
+.pvis::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  z-index:5;
+  background:#fff;
+  opacity:.15;
 }
 
-.proj-desc {
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--mid);
-  margin-bottom: 32px;
-  max-width: 400px;
+.ptag{
+  position:absolute;
+  top:20px;left:20px;
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:400;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#fff;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  padding:5px 10px;
+  z-index:6;
+  backdrop-filter:blur(4px);
 }
 
-.proj-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 36px;
+/* Info side */
+.pinfo{
+  background:#000;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:56px 64px;
 }
-.proj-tech {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  font-weight: 300;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--dim);
-  border: 1px solid var(--line);
-  padding: 5px 10px;
+.pnum{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:3px;
+  color:rgba(255,255,255,.2);
+  margin-bottom:16px;
+}
+.ptitle{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(30px,3.2vw,50px);
+  letter-spacing:1.5px;
+  color:#fff;
+  line-height:1.0;
+  margin-bottom:20px;
+}
+.pdesc{
+  font-size:14px;
+  font-weight:300;
+  line-height:1.8;
+  color:rgba(255,255,255,.45);
+  max-width:380px;
+  margin-bottom:28px;
+}
+.ptechs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-bottom:32px;
+}
+.ptech{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.35);
+  border:1px solid rgba(255,255,255,.12);
+  padding:5px 10px;
+  transition:all .2s;
+  cursor:default;
+}
+.ptech:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+
+.plink{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+  padding-bottom:2px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  align-self:flex-start;
+  transition:color .2s,border-color .2s;
+}
+.plink:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+.plink .arr{display:inline-block;transition:transform .2s;}
+.plink:hover .arr{transform:translateX(4px);}
+
+/* ── ABOUT ───────────────────────────────────────── */
+#about{
+  background:#0a0a0a;
+  border-top:1px solid rgba(255,255,255,.07);
+  display:grid;
+  grid-template-columns:1fr 1fr;
 }
 
-.proj-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
-  padding-bottom: 3px;
-  border-bottom: 1px solid var(--line);
-  transition: border-color 0.25s, color 0.25s;
-  align-self: flex-start;
+.about-l{
+  padding:88px 72px;
+  border-right:1px solid rgba(255,255,255,.07);
 }
-.proj-link:hover { border-color: var(--gold); color: var(--gold); }
-.proj-link .a { display: inline-block; transition: transform 0.25s; }
-.proj-link:hover .a { transform: translateX(4px); }
-
-/* Image-only projects (no 3D) */
-.proj-img-wrap {
-  position: relative;
-  overflow: hidden;
-  background: var(--surface);
-}
-.proj-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: brightness(0.7) contrast(1.05);
-  transition: filter 0.5s ease, transform 0.8s ease;
-}
-.project-row:hover .proj-img-wrap img {
-  filter: brightness(0.85) contrast(1.05);
-  transform: scale(1.03);
+.about-r{
+  padding:88px 72px;
+  background:#000;
 }
 
-/* ============================================================
-   ABOUT / SKILLS STRIP
-   ============================================================ */
-#about {
-  border-top: 1px solid var(--line);
-  padding: 100px 56px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
+.asup{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.3);
+  margin-bottom:20px;
 }
 
-.about-left {}
-.about-sup {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.about-sup::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
-
-.about-headline {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(36px, 4.5vw, 64px);
-  line-height: 0.95;
-  letter-spacing: 1px;
-  color: var(--white);
-  margin-bottom: 28px;
+.aheading{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,5vw,68px);
+  letter-spacing:1.5px;
+  color:#fff;
+  line-height:1.0;
+  margin-bottom:28px;
 }
 
-.about-body {
-  font-size: 14px;
-  line-height: 1.85;
-  color: var(--mid);
-  margin-bottom: 40px;
+.abody{
+  font-size:14px;
+  font-weight:300;
+  line-height:1.85;
+  color:rgba(255,255,255,.45);
+  margin-bottom:40px;
 }
-.about-body strong { color: var(--white); font-weight: 400; }
+.abody strong{color:rgba(255,255,255,.8);font-weight:400;}
 
-.about-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  margin-bottom: 40px;
+.ameta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border:1px solid rgba(255,255,255,.07);
 }
-.about-meta-item {
-  background: var(--bg);
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.ameta-cell{
+  padding:16px 20px;
+  border-right:1px solid rgba(255,255,255,.07);
+  border-bottom:1px solid rgba(255,255,255,.07);
 }
-.about-meta-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--dim);
+.ameta-cell:nth-child(2n){border-right:none;}
+.ameta-cell:nth-last-child(-n+2){border-bottom:none;}
+.ameta-label{
+  font-family:'DM Mono',monospace;
+  font-size:8px;
+  font-weight:300;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.2);
+  margin-bottom:5px;
 }
-.about-meta-val {
-  font-size: 13px;
-  color: var(--white);
-}
-
-.about-right {}
-.skills-heading {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 32px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.skills-heading::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-.skill-group {
-  background: var(--bg);
-  padding: 20px 22px;
-}
-.skill-group-name {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 12px;
-}
-.skill-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.skill-pill {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--mid);
-  padding: 4px 8px;
-  border: 1px solid var(--line);
-  transition: border-color 0.2s, color 0.2s;
-}
-.skill-pill:hover { border-color: var(--gold-dim); color: var(--white); }
-
-/* ============================================================
-   CONTACT / FOOTER
-   ============================================================ */
-#contact {
-  border-top: 1px solid var(--line);
-  padding: 100px 56px 60px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
+.ameta-val{
+  font-size:13px;
+  font-weight:300;
+  color:rgba(255,255,255,.65);
 }
 
-.contact-left .contact-sup {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.contact-left .contact-sup::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
-
-.contact-headline {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(36px, 4vw, 58px);
-  line-height: 0.95;
-  letter-spacing: 1px;
-  color: var(--white);
-  margin-bottom: 22px;
-}
-.contact-sub {
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--mid);
-  margin-bottom: 40px;
+.skills-head{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.7);
+  margin-bottom:32px;
 }
 
-.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+.skill-group{margin-bottom:28px;}
+.sg-name{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  padding-bottom:8px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  margin-bottom:10px;
 }
-.contact-link-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--line);
-  text-decoration: none;
-  transition: padding-left 0.25s;
+.sg-pills{display:flex;flex-wrap:wrap;gap:6px;}
+.sg-pill{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.8);
+  border:1px solid rgba(255,255,255,.25);
+  padding:5px 10px;
+  transition:all .2s;
+  cursor:default;
 }
-.contact-link-row:first-child { border-top: 1px solid var(--line); }
-.contact-link-row:hover { padding-left: 8px; }
-.contact-link-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--mid);
-  transition: color 0.25s;
-}
-.contact-link-row:hover .contact-link-label { color: var(--white); }
-.contact-link-val {
-  font-size: 13px;
-  color: var(--dim);
-  transition: color 0.25s;
-}
-.contact-link-row:hover .contact-link-val { color: var(--gold); }
+.sg-pill:hover{color:#fff;border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.08);}
 
-.contact-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 8px;
-}
-.clearance-box {
-  border: 1px solid var(--gold-dim);
-  padding: 28px;
-  margin-bottom: 32px;
-}
-.clearance-box-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 12px;
-}
-.clearance-box-text {
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--mid);
+/* ── CONTACT ─────────────────────────────────────── */
+#contact{
+  background:#000;
+  border-top:1px solid rgba(255,255,255,.07);
+  padding:96px 72px 56px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+  align-items:start;
 }
 
-.footer-bar {
-  grid-column: 1 / -1;
-  border-top: 1px solid var(--line);
-  padding-top: 28px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.csup{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  font-weight:300;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.3);
+  margin-bottom:20px;
 }
-.footer-copy {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--dim);
+.cheading{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(44px,6vw,80px);
+  letter-spacing:1.5px;
+  color:#fff;
+  line-height:1.0;
+  margin-bottom:20px;
+}
+.csub{
+  font-size:14px;
+  font-weight:300;
+  line-height:1.8;
+  color:rgba(255,255,255,.65);
+  margin-bottom:44px;
 }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
+.crows{display:flex;flex-direction:column;}
+.crow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  text-decoration:none;
+  transition:padding-left .2s;
+}
+.crow:first-child{border-top:1px solid rgba(255,255,255,.07);}
+.crow:hover{padding-left:8px;}
+.crow-label{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+  transition:color .2s;
+}
+.crow:hover .crow-label{color:rgba(255,255,255,.6);}
+.crow-val{
+  font-size:13px;
+  font-weight:300;
+  color:rgba(255,255,255,.85);
+  transition:color .2s;
+}
+.crow:hover .crow-val{color:#fff;}
+
+.cright{display:flex;flex-direction:column;gap:0;}
+.clearance-box{
+  border:1px solid rgba(255,255,255,.1);
+  padding:20px 24px;
+  border-bottom:none;
+}
+.clearance-box-label{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  font-weight:300;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  margin-bottom:8px;
+}
+.clearance-box-text{
+  font-size:12px;
+  font-weight:300;
+  line-height:1.65;
+  color:rgba(255,255,255,.7);
+}
+.avail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border:1px solid rgba(255,255,255,.1);
+}
+.avail-cell{
+  padding:16px 20px;
+  border-right:1px solid rgba(255,255,255,.1);
+}
+.avail-cell:last-child{border-right:none;}
+.avail-label{
+  font-family:'DM Mono',monospace;
+  font-size:8px;font-weight:300;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.2);margin-bottom:5px;
+}
+.avail-val{font-size:12px;font-weight:300;color:rgba(255,255,255,.75);}
+
+.footer-bar{
+  grid-column:1/-1;
+  border-top:1px solid rgba(255,255,255,.07);
+  padding-top:28px;
+  display:flex;
+  justify-content:space-between;
+}
+.footer-text{
+  font-family:'DM Mono',monospace;
+  font-size:9px;font-weight:300;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.55);
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width: 900px) {
-  nav { padding: 22px 28px; }
-  .nav-links { gap: 20px; }
-  .hero-content { padding: 0 28px 140px; }
-  .hero-stats { flex-wrap: wrap; }
-  .stat-cell { flex: 0 0 50%; padding: 14px 0 14px 28px; }
-  .section-header { padding: 0 28px 40px; }
-  .project-row { grid-template-columns: 1fr; min-height: auto; }
-  .project-row.flip { direction: ltr; }
-  .proj-canvas-wrap { height: 280px; }
-  .proj-info { padding: 36px 28px; }
-  #about { grid-template-columns: 1fr; gap: 48px; padding: 60px 28px; }
-  #contact { grid-template-columns: 1fr; gap: 48px; padding: 60px 28px; }
-  .scroll-cue { display: none; }
+/* ── ANIMATION ───────────────────────────────────── */
+@keyframes up{
+  from{opacity:0;transform:translateY(18px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ── SEE ALL BUTTON ──────────────────────────────── */
+.see-all-wrap{
+  display:flex;
+  justify-content:center;
+  padding:64px 0 80px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.see-all-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  padding:16px 48px;
+  border:1px solid rgba(255,255,255,.25);
+  color:rgba(255,255,255,.7);
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  font-weight:300;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:all .25s;
+}
+.see-all-btn:hover{
+  background:#fff;
+  border-color:#fff;
+  color:#000;
+}
+.see-all-btn:hover .arr{transform:translateX(5px);}
+.see-all-btn .arr{display:inline-block;transition:transform .25s;}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:860px){
+  .hero-text{padding:0 28px;padding-bottom:130px;}
+  .aircraft-label{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .stat{padding:14px 0 14px 24px;}
+  .sec-header{padding:56px 28px 36px;flex-direction:column;gap:12px;}
+  .prow{grid-template-columns:1fr;min-height:auto;}
+  .prow.flip{direction:ltr;}
+  .pvis{height:260px;}
+  .pinfo{padding:36px 28px;}
+  #about{grid-template-columns:1fr;}
+  .about-l{padding:60px 28px;border-right:none;border-bottom:1px solid rgba(255,255,255,.07);}
+  .about-r{padding:48px 28px;}
+  #contact{grid-template-columns:1fr;gap:48px;padding:60px 28px 40px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     NAV
-     ============================================================ -->
-<nav>
-  <a class="nav-logo" href="#hero">Aryaa Vijay</a>
-  <ul class="nav-links">
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="https://aryaavijaysportfolio.com/resume" target="_blank">Resume</a></li>
-  </ul>
-</nav>
-
-<!-- ============================================================
+<!-- ═══════════════════════════════════════════════
      HERO
-     ============================================================ -->
+═══════════════════════════════════════════════ -->
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
-  <div class="hero-overlay"></div>
+  <div class="hero-veil"></div>
 
-  <div class="hero-content">
-    <div class="hero-eyebrow">
-      <div class="hero-eyebrow-bar"></div>
-      <span>Florida Institute of Technology · B.S. Aerospace Engineering</span>
+  <div class="aircraft-label">
+    <div class="aircraft-label-name">SR-71 Blackbird</div>
+    <div class="aircraft-label-line"></div>
+    <div class="aircraft-label-spec">
+      Mach 3.2+ · 85,000 ft ceiling<br>
+      Pratt &amp; Whitney J58<br>
+      Lockheed Skunk Works · 1966
     </div>
+  </div>
+
+  <div class="hero-text">
+    <div class="hero-super">Florida Institute of Technology · Aerospace Engineering · Class of 2027</div>
 
     <h1 class="hero-name">
-      <span class="n1">Aryaa</span>
-      <span class="n2">Vijay</span>
+      <span class="l1">Aryaa</span>
+      <span class="l2">Vijay</span>
     </h1>
 
-    <p class="hero-body">
-      <strong>Defense technology enthusiast</strong> and Aerospace Engineering student
-      specializing in embedded systems, sensor fusion, and computational fluid dynamics.
-      Building the systems that define <strong>tomorrow's mission-critical aerospace.</strong>
+    <div class="hero-divider"></div>
+
+    <p class="hero-desc">
+      <strong>Aerospace engineering student</strong> specializing in embedded systems,
+      sensor fusion, and computational fluid dynamics.
+      Building the systems that define tomorrow's defense and aerospace.
     </p>
 
-    <div class="hero-actions">
-      <a class="btn-solid" href="#projects">View Projects</a>
+    <div class="hero-cta">
+      <a class="btn-white" href="#projects">View Projects</a>
       <a class="btn-ghost" href="https://aryaavijaysportfolio.com/resume" target="_blank">
-        Download Resume <span class="a">→</span>
+        Resume <span class="arr">→</span>
       </a>
     </div>
   </div>
 
   <div class="hero-stats">
-    <div class="stat-cell">
+    <div class="stat">
       <span class="stat-n">3.78</span>
       <span class="stat-l">GPA</span>
     </div>
-    <div class="stat-cell">
+    <div class="stat">
       <span class="stat-n">10+</span>
       <span class="stat-l">Projects</span>
     </div>
-    <div class="stat-cell">
+    <div class="stat">
       <span class="stat-n">5+</span>
       <span class="stat-l">Languages</span>
     </div>
-    <div class="stat-cell">
+    <div class="stat">
       <span class="stat-n">2027</span>
       <span class="stat-l">Graduation</span>
     </div>
   </div>
-
-  <div class="scroll-cue">
-    <span>Scroll</span>
-    <div class="scroll-cue-line"></div>
-  </div>
 </section>
 
-<!-- ============================================================
+<!-- ═══════════════════════════════════════════════
      PROJECTS
-     ============================================================ -->
+═══════════════════════════════════════════════ -->
 <section id="projects">
-  <div class="section-header">
-    <span class="section-label">Selected Work</span>
-    <h2 class="section-title">Projects</h2>
+
+  <div class="sec-header">
+    <div>
+      <div class="sec-eyebrow">Selected Work</div>
+      <h2 class="sec-title">Projects</h2>
+    </div>
+    <span class="sec-count">04 Projects</span>
   </div>
 
-  <!-- 01 — Surveillance Drone (3D model) -->
-  <div class="project-row" id="proj-1">
-    <div class="proj-canvas-wrap">
+  <!-- 01 Drone -->
+  <div class="prow" id="proj-1">
+    <div class="pvis">
       <canvas id="canvas-drone" style="width:100%;height:100%;display:block;"></canvas>
-      <div class="proj-canvas-overlay"></div>
-      <div class="proj-tag">Defense</div>
+      <div class="blend-r"></div>
+      <div class="ptag">Defense</div>
     </div>
-    <div class="proj-info">
-      <div class="proj-num">01 — 2024</div>
-      <h3 class="proj-title">Surveillance & Reconnaissance Drone</h3>
-      <p class="proj-desc">Multi-rotor drone with embedded sensors, real-time flight controllers, and live data acquisition for surveillance applications. Integrates GPS, IMU, and camera systems for autonomous navigation.</p>
-      <div class="proj-tags">
-        <span class="proj-tech">Embedded Systems</span>
-        <span class="proj-tech">Sensor Fusion</span>
-        <span class="proj-tech">CAD</span>
-        <span class="proj-tech">Arduino</span>
-        <span class="proj-tech">LabVIEW</span>
+    <div class="pinfo">
+      <div class="pnum">01 — 2024</div>
+      <h3 class="ptitle">Surveillance &amp; Reconnaissance Drone</h3>
+      <p class="pdesc">Multi-rotor drone with embedded sensors, real-time flight controllers, and live data acquisition for surveillance. Integrates GPS, IMU, and camera systems for autonomous navigation.</p>
+      <div class="ptechs">
+        <span class="ptech">Embedded Systems</span>
+        <span class="ptech">Sensor Fusion</span>
+        <span class="ptech">CAD</span>
+        <span class="ptech">Arduino</span>
+        <span class="ptech">LabVIEW</span>
       </div>
-      <a class="proj-link" href="https://aryaavijaysportfolio.com/portfolio/project-one-f5w4d-z9nem-s3jda-eyssk-a6prr-b7y99" target="_blank">
-        View Project <span class="a">→</span>
+      <a class="plink" href="https://aryaavijaysportfolio.com/portfolio/project-one-f5w4d-z9nem-s3jda-eyssk-a6prr-b7y99" target="_blank">
+        View Project <span class="arr">→</span>
       </a>
     </div>
   </div>
 
-  <!-- 02 — Hypersonic Missile CFD (3D model, flipped) -->
-  <div class="project-row flip" id="proj-2">
-    <div class="proj-canvas-wrap flip-fade">
+  <!-- 02 Missile (flip) -->
+  <div class="prow flip" id="proj-2">
+    <div class="pvis">
       <canvas id="canvas-missile" style="width:100%;height:100%;display:block;"></canvas>
-      <div class="proj-canvas-overlay" style="background:linear-gradient(to left,var(--bg) 0%,transparent 40%)"></div>
-      <div class="proj-tag">Defense · Research</div>
+      <div class="blend-l"></div>
+      <div class="ptag">Defense · Research</div>
     </div>
-    <div class="proj-info">
-      <div class="proj-num">02 — 2025</div>
-      <h3 class="proj-title">CAD / CFD of Hypersonic Missile</h3>
-      <p class="proj-desc">Aerodynamic modeling and full CFD analysis at extreme Mach numbers. Studied shock wave interactions, bow shock formation, and thermal loads at Mach 5.8+. Mesh of 2.4M cells solved in NX Siemens.</p>
-      <div class="proj-tags">
-        <span class="proj-tech">NX Siemens</span>
-        <span class="proj-tech">CFD</span>
-        <span class="proj-tech">MATLAB</span>
-        <span class="proj-tech">Aerodynamics</span>
-        <span class="proj-tech">Mach 5.8+</span>
+    <div class="pinfo">
+      <div class="pnum">02 — 2025</div>
+      <h3 class="ptitle">CAD / CFD of Hypersonic Missile</h3>
+      <p class="pdesc">Aerodynamic modeling and full CFD analysis at Mach 5.8+. Studied shock wave interactions, bow shock formation, and thermal loads. 2.4M cell mesh solved in NX Siemens.</p>
+      <div class="ptechs">
+        <span class="ptech">NX Siemens</span>
+        <span class="ptech">CFD</span>
+        <span class="ptech">MATLAB</span>
+        <span class="ptech">Aerodynamics</span>
+        <span class="ptech">Mach 5.8+</span>
       </div>
-      <a class="proj-link" href="https://aryaavijaysportfolio.com/portfolio/cadcfd-of-hypersonic-missile" target="_blank">
-        View Project <span class="a">→</span>
+      <a class="plink" href="https://aryaavijaysportfolio.com/portfolio/cadcfd-of-hypersonic-missile" target="_blank">
+        View Project <span class="arr">→</span>
       </a>
     </div>
   </div>
 
-  <!-- 03 — SR-71 / CFD Car (3D model) -->
-  <div class="project-row" id="proj-3">
-    <div class="proj-canvas-wrap">
-      <canvas id="canvas-sr71" style="width:100%;height:100%;display:block;"></canvas>
-      <div class="proj-canvas-overlay"></div>
-      <div class="proj-tag">Aerospace · CFD</div>
+  <!-- 03 CFD Car -->
+  <div class="prow" id="proj-3">
+    <div class="pvis">
+      <img src="https://images.squarespace-cdn.com/content/v1/697ff29f785435542a281f3c/bbd681f0-c3df-43a3-a3db-0b60be44c66a/Screenshot+2026-02-01+at+8.17.05%E2%80%AFPM.png?format=1500w" alt="CFD Car" loading="lazy">
+      <div class="blend-r"></div>
+      <div class="ptag">Aerospace · CFD</div>
     </div>
-    <div class="proj-info">
-      <div class="proj-num">03 — 2025</div>
-      <h3 class="proj-title">SR-71 Blackbird — Aerodynamic Study</h3>
-      <p class="proj-desc">Detailed aerodynamic analysis of the iconic SR-71 Blackbird geometry. Pressure distributions, drag coefficients, and flow visualization across the full speed envelope from subsonic to Mach 3.2.</p>
-      <div class="proj-tags">
-        <span class="proj-tech">CFD</span>
-        <span class="proj-tech">NX Siemens</span>
-        <span class="proj-tech">MATLAB</span>
-        <span class="proj-tech">Onshape</span>
+    <div class="pinfo">
+      <div class="pnum">03 — 2025</div>
+      <h3 class="ptitle">CFD Analysis of My Car</h3>
+      <p class="pdesc">Full computational fluid dynamics simulation of a personal vehicle. Pressure distribution maps, drag coefficients, and airflow visualization using industry-grade CFD software.</p>
+      <div class="ptechs">
+        <span class="ptech">CFD</span>
+        <span class="ptech">MATLAB</span>
+        <span class="ptech">NX Siemens</span>
+        <span class="ptech">Pressure Analysis</span>
       </div>
-      <a class="proj-link" href="https://aryaavijaysportfolio.com/portfolio" target="_blank">
-        View Project <span class="a">→</span>
+      <a class="plink" href="https://aryaavijaysportfolio.com/portfolio/project-four-l3zw3-dk9py-xcmem-llk7k-cnfna-6j453" target="_blank">
+        View Project <span class="arr">→</span>
       </a>
     </div>
   </div>
 
-  <!-- 04 — CFD Car (image) -->
-  <div class="project-row flip" id="proj-4">
-    <div class="proj-img-wrap">
-      <img src="https://images.squarespace-cdn.com/content/v1/697ff29f785435542a281f3c/bbd681f0-c3df-43a3-a3db-0b60be44c66a/Screenshot+2026-02-01+at+8.17.05%E2%80%AFPM.png?format=1500w" alt="CFD Analysis" loading="lazy">
-      <div class="proj-tag">Aerospace</div>
-    </div>
-    <div class="proj-info">
-      <div class="proj-num">04 — 2025</div>
-      <h3 class="proj-title">CFD Analysis of My Car</h3>
-      <p class="proj-desc">Full computational fluid dynamics simulation of a personal vehicle. Produced pressure distribution maps, calculated drag coefficients, and visualized airflow patterns around the body using industry CFD tools.</p>
-      <div class="proj-tags">
-        <span class="proj-tech">CFD</span>
-        <span class="proj-tech">MATLAB</span>
-        <span class="proj-tech">NX Siemens</span>
-        <span class="proj-tech">Pressure Analysis</span>
-      </div>
-      <a class="proj-link" href="https://aryaavijaysportfolio.com/portfolio/project-four-l3zw3-dk9py-xcmem-llk7k-cnfna-6j453" target="_blank">
-        View Project <span class="a">→</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- 05 — Flow.AI (image) -->
-  <div class="project-row" id="proj-5">
-    <div class="proj-img-wrap">
-      <img src="https://images.squarespace-cdn.com/content/v1/697ff29f785435542a281f3c/1796d946-5644-4dce-9781-5d3ae65cb94e/Screenshot+2026-02-01+at+8.25.01%E2%80%AFPM.png?format=1500w" alt="Flow.AI" loading="lazy">
-      <div class="proj-tag">Software · AI</div>
-    </div>
-    <div class="proj-info">
-      <div class="proj-num">05 — 2025</div>
-      <h3 class="proj-title">Flow.AI</h3>
-      <p class="proj-desc">AI-powered engineering workflow application using machine learning to solve domain-specific problems. Leverages Python ML pipelines to automate repetitive engineering analysis tasks and surface insights faster.</p>
-      <div class="proj-tags">
-        <span class="proj-tech">Python</span>
-        <span class="proj-tech">Machine Learning</span>
-        <span class="proj-tech">AI</span>
-        <span class="proj-tech">Engineering</span>
-      </div>
-      <a class="proj-link" href="https://aryaavijaysportfolio.com/portfolio/project-two-ky966-n329z-nnx53-feazs-ajmse-9hsk8" target="_blank">
-        View Project <span class="a">→</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- 06 — Flying Wing (image, flipped) -->
-  <div class="project-row flip" id="proj-6">
-    <div class="proj-img-wrap">
+  <!-- 04 Flying Wing (flip) -->
+  <div class="prow flip" id="proj-4">
+    <div class="pvis">
       <img src="https://images.squarespace-cdn.com/content/v1/697ff29f785435542a281f3c/398badaf-34c2-4838-9e66-c9aa5e50492c/Screenshot+2026-02-01+at+8.32.03%E2%80%AFPM.png?format=1500w" alt="Flying Wing" loading="lazy">
-      <div class="proj-tag">Aerospace</div>
+      <div class="blend-l"></div>
+      <div class="ptag">Aerospace</div>
     </div>
-    <div class="proj-info">
-      <div class="proj-num">06 — 2024</div>
-      <h3 class="proj-title">Flying Wing Glider</h3>
-      <p class="proj-desc">Designed, manufactured, and flight-tested a flying wing glider applying aerodynamic stability principles and structural design methods. Full design cycle from CAD to physical flight test and iteration.</p>
-      <div class="proj-tags">
-        <span class="proj-tech">Aerodynamics</span>
-        <span class="proj-tech">Structural Design</span>
-        <span class="proj-tech">Onshape</span>
-        <span class="proj-tech">3D Printing</span>
+    <div class="pinfo">
+      <div class="pnum">04 — 2024</div>
+      <h3 class="ptitle">Flying Wing Glider</h3>
+      <p class="pdesc">Designed, manufactured, and flight-tested a flying wing glider applying aerodynamic stability principles and structural design methods. Full cycle from CAD to physical flight test and iteration.</p>
+      <div class="ptechs">
+        <span class="ptech">Aerodynamics</span>
+        <span class="ptech">Structural Design</span>
+        <span class="ptech">Onshape</span>
+        <span class="ptech">3D Printing</span>
       </div>
-      <a class="proj-link" href="https://aryaavijaysportfolio.com/portfolio/flying-wing-glider-project" target="_blank">
-        View Project <span class="a">→</span>
+      <a class="plink" href="https://aryaavijaysportfolio.com/portfolio/flying-wing-glider-project" target="_blank">
+        View Project <span class="arr">→</span>
       </a>
     </div>
   </div>
 
-  <!-- 07 — Bioprinting (image) -->
-  <div class="project-row" id="proj-7">
-    <div class="proj-img-wrap">
-      <img src="https://images.squarespace-cdn.com/content/v1/697ff29f785435542a281f3c/89cc028c-fd66-404e-bc7b-6cc296a5791d/A_Print_Gelma.jpg?format=1500w" alt="3D Printing Hydrogels" loading="lazy">
-      <div class="proj-tag">Research · Bioengineering</div>
-    </div>
-    <div class="proj-info">
-      <div class="proj-num">07 — 2024</div>
-      <h3 class="proj-title">3D Printing Hydrogels</h3>
-      <p class="proj-desc">Bioprinting research developing novel processes for 3D printing hydrogel structures with tissue engineering applications. Investigated GelMA formulations, print parameters, and structural fidelity at micron resolution.</p>
-      <div class="proj-tags">
-        <span class="proj-tech">Bioprinting</span>
-        <span class="proj-tech">3D Printing</span>
-        <span class="proj-tech">Materials Science</span>
-        <span class="proj-tech">Research</span>
-      </div>
-      <a class="proj-link" href="https://aryaavijaysportfolio.com/portfolio/project-three-sng7y-jkgxx-kmlk5-rslaw-j2h5a-d6drj" target="_blank">
-        View Project <span class="a">→</span>
-      </a>
-    </div>
+  <!-- See All Projects -->
+  <div class="see-all-wrap">
+    <a class="see-all-btn" href="https://www.aryaavijaysportfolio.com/portfolio" target="_blank">
+      See All Projects <span class="arr">→</span>
+    </a>
   </div>
 
 </section>
 
-<!-- ============================================================
+<!-- ═══════════════════════════════════════════════
      ABOUT
-     ============================================================ -->
+═══════════════════════════════════════════════ -->
 <section id="about">
-  <div class="about-left">
-    <div class="about-sup">About</div>
-    <h2 class="about-headline">Aerospace<br>Engineer &<br>Builder</h2>
-    <p class="about-body">
-      Junior at <strong>Florida Institute of Technology</strong> pursuing a B.S. in Aerospace Engineering with a strong academic record and hands-on project experience spanning embedded systems, computational fluid dynamics, and AI-driven tools.
-      <br><br>
-      Driven by a deep interest in <strong>defense technology</strong> — from hypersonic vehicle analysis to autonomous surveillance systems. Currently seeking internship opportunities where I can contribute to mission-critical aerospace programs.
+  <div class="about-l">
+    <div class="asup">About</div>
+    <h2 class="aheading">Aerospace<br>Engineer<br>&amp; Builder</h2>
+    <p class="abody">
+      Junior at <strong>Florida Institute of Technology</strong> pursuing a B.S. in Aerospace Engineering with a strong academic record and hands-on project experience across embedded systems, CFD, and AI-driven engineering tools.<br><br>
+      Driven by a deep interest in <strong>defense technology</strong> — from hypersonic vehicle analysis to autonomous surveillance systems. Seeking internships in mission-critical aerospace programs.
     </p>
-    <div class="about-meta">
-      <div class="about-meta-item">
-        <span class="about-meta-label">University</span>
-        <span class="about-meta-val">Florida Institute of Technology</span>
+    <div class="ameta">
+      <div class="ameta-cell">
+        <div class="ameta-label">University</div>
+        <div class="ameta-val">Florida Inst. of Technology</div>
       </div>
-      <div class="about-meta-item">
-        <span class="about-meta-label">Degree</span>
-        <span class="about-meta-val">B.S. Aerospace Engineering</span>
+      <div class="ameta-cell">
+        <div class="ameta-label">Degree</div>
+        <div class="ameta-val">B.S. Aerospace Engineering</div>
       </div>
-      <div class="about-meta-item">
-        <span class="about-meta-label">GPA</span>
-        <span class="about-meta-val">3.78 / 4.00</span>
+      <div class="ameta-cell">
+        <div class="ameta-label">GPA</div>
+        <div class="ameta-val">3.78 / 4.00</div>
       </div>
-      <div class="about-meta-item">
-        <span class="about-meta-label">Graduation</span>
-        <span class="about-meta-val">May 2027</span>
+      <div class="ameta-cell">
+        <div class="ameta-label">Graduation</div>
+        <div class="ameta-val">May 2027</div>
       </div>
-      <div class="about-meta-item">
-        <span class="about-meta-label">Status</span>
-        <span class="about-meta-val">U.S. Citizen · Clearance Eligible</span>
+      <div class="ameta-cell">
+        <div class="ameta-label">Citizenship</div>
+        <div class="ameta-val">U.S. Citizen · Clearance Eligible</div>
       </div>
-      <div class="about-meta-item">
-        <span class="about-meta-label">Location</span>
-        <span class="about-meta-val">Melbourne, FL</span>
+      <div class="ameta-cell">
+        <div class="ameta-label">Location</div>
+        <div class="ameta-val">Melbourne, FL</div>
       </div>
     </div>
   </div>
 
-  <div class="about-right">
-    <div class="skills-heading">Technical Skills</div>
-    <div class="skills-grid">
-      <div class="skill-group">
-        <div class="skill-group-name">Software</div>
-        <div class="skill-list">
-          <span class="skill-pill">MATLAB</span>
-          <span class="skill-pill">Python</span>
-          <span class="skill-pill">LabVIEW</span>
-          <span class="skill-pill">NX Siemens</span>
-          <span class="skill-pill">Onshape</span>
-          <span class="skill-pill">KiCad</span>
-          <span class="skill-pill">Excel</span>
-        </div>
+  <div class="about-r">
+    <div class="skills-head">Technical Skills</div>
+
+    <div class="skill-group">
+      <div class="sg-name">Software &amp; Tools</div>
+      <div class="sg-pills">
+        <span class="sg-pill">MATLAB</span>
+        <span class="sg-pill">Python</span>
+        <span class="sg-pill">LabVIEW</span>
+        <span class="sg-pill">NX Siemens</span>
+        <span class="sg-pill">Onshape</span>
+        <span class="sg-pill">KiCad</span>
+        <span class="sg-pill">Excel</span>
       </div>
-      <div class="skill-group">
-        <div class="skill-group-name">Engineering</div>
-        <div class="skill-list">
-          <span class="skill-pill">CFD</span>
-          <span class="skill-pill">CAD</span>
-          <span class="skill-pill">Circuit Design</span>
-          <span class="skill-pill">Sensor Fusion</span>
-          <span class="skill-pill">Data Acquisition</span>
-        </div>
+    </div>
+
+    <div class="skill-group">
+      <div class="sg-name">Engineering</div>
+      <div class="sg-pills">
+        <span class="sg-pill">CFD</span>
+        <span class="sg-pill">CAD Design</span>
+        <span class="sg-pill">Sensor Fusion</span>
+        <span class="sg-pill">Embedded Systems</span>
+        <span class="sg-pill">Circuit Design</span>
+        <span class="sg-pill">Data Acquisition</span>
       </div>
-      <div class="skill-group">
-        <div class="skill-group-name">Manufacturing</div>
-        <div class="skill-list">
-          <span class="skill-pill">3D Printing</span>
-          <span class="skill-pill">Bioprinting</span>
-          <span class="skill-pill">Arduino</span>
-          <span class="skill-pill">Embedded Sys</span>
-        </div>
+    </div>
+
+    <div class="skill-group">
+      <div class="sg-name">Manufacturing</div>
+      <div class="sg-pills">
+        <span class="sg-pill">3D Printing</span>
+        <span class="sg-pill">Arduino</span>
+        <span class="sg-pill">Rapid Prototyping</span>
       </div>
-      <div class="skill-group">
-        <div class="skill-group-name">Languages</div>
-        <div class="skill-list">
-          <span class="skill-pill">English</span>
-          <span class="skill-pill">Hindi</span>
-          <span class="skill-pill">Gujarati</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-name">Coursework</div>
-        <div class="skill-list">
-          <span class="skill-pill">Aerodynamics</span>
-          <span class="skill-pill">Compressible Flow</span>
-          <span class="skill-pill">Control Systems</span>
-          <span class="skill-pill">Structural Design</span>
-          <span class="skill-pill">Fluid Mechanics</span>
-          <span class="skill-pill">Thermodynamics</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-name">Soft Skills</div>
-        <div class="skill-list">
-          <span class="skill-pill">Systems Integration</span>
-          <span class="skill-pill">Research</span>
-          <span class="skill-pill">Technical Writing</span>
-        </div>
+    </div>
+
+    <div class="skill-group">
+      <div class="sg-name">Coursework</div>
+      <div class="sg-pills">
+        <span class="sg-pill">Aerodynamics</span>
+        <span class="sg-pill">Compressible Flow</span>
+        <span class="sg-pill">Control Systems</span>
+        <span class="sg-pill">Structural Design</span>
+        <span class="sg-pill">Fluid Mechanics</span>
+        <span class="sg-pill">Thermodynamics</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================
+<!-- ═══════════════════════════════════════════════
      CONTACT
-     ============================================================ -->
+═══════════════════════════════════════════════ -->
 <section id="contact">
-  <div class="contact-left">
-    <div class="contact-sup">Contact</div>
-    <h2 class="contact-headline">Let's Build<br>Something.</h2>
-    <p class="contact-sub">
-      Available for internships, research opportunities, and defense technology roles starting Summer 2025.
-      U.S. Citizen, security clearance eligible.
-    </p>
-    <div class="contact-links">
-      <a class="contact-link-row" href="mailto:avijay2024@my.fit.edu">
-        <span class="contact-link-label">Email</span>
-        <span class="contact-link-val">avijay2024@my.fit.edu</span>
+  <div class="cleft">
+    <div class="csup">Contact</div>
+    <h2 class="cheading">Let's Build<br>Something.</h2>
+    <p class="csub">Available for internships and defense technology roles starting Summer 2025. U.S. Citizen, security clearance eligible.</p>
+    <div class="crows">
+      <a class="crow" href="mailto:avijay2024@my.fit.edu">
+        <span class="crow-label">Email</span>
+        <span class="crow-val">avijay2024@my.fit.edu</span>
       </a>
-      <a class="contact-link-row" href="tel:+14257389190">
-        <span class="contact-link-label">Phone</span>
-        <span class="contact-link-val">+1 (425) 738-9190</span>
+      <a class="crow" href="tel:+14257389190">
+        <span class="crow-label">Phone</span>
+        <span class="crow-val">+1 (425) 738-9190</span>
       </a>
-      <a class="contact-link-row" href="https://linkedin.com/in/yourprofile" target="_blank">
-        <span class="contact-link-label">LinkedIn</span>
-        <span class="contact-link-val">linkedin.com/in/aryaavijay</span>
+      <a class="crow" href="https://linkedin.com/in/aryaavijay" target="_blank">
+        <span class="crow-label">LinkedIn</span>
+        <span class="crow-val">linkedin.com/in/aryaavijay</span>
       </a>
-      <a class="contact-link-row" href="https://aryaavijaysportfolio.com/resume" target="_blank">
-        <span class="contact-link-label">Resume</span>
-        <span class="contact-link-val">Download PDF →</span>
+      <a class="crow" href="https://aryaavijaysportfolio.com/resume" target="_blank">
+        <span class="crow-label">Resume</span>
+        <span class="crow-val">Download PDF →</span>
       </a>
     </div>
   </div>
 
-  <div class="contact-right">
+  <div class="cright">
     <div class="clearance-box">
       <div class="clearance-box-label">Security Status</div>
-      <div class="clearance-box-text">
-        U.S. Citizen — eligible to obtain a U.S. Government security clearance.
-        Available for roles with defense contractors including Northrop Grumman,
-        Raytheon, Lockheed Martin, L3Harris, and government agencies.
-      </div>
+      <div class="clearance-box-text">U.S. Citizen — eligible to obtain a U.S. Government security clearance. Available for roles with Northrop Grumman, Raytheon, Lockheed Martin, L3Harris, and government agencies.</div>
     </div>
-    <div class="about-meta">
-      <div class="about-meta-item">
-        <span class="about-meta-label">Availability</span>
-        <span class="about-meta-val">Summer 2025 Internship</span>
+    <div class="avail-grid">
+      <div class="avail-cell">
+        <div class="avail-label">Availability</div>
+        <div class="avail-val">Summer 2025 Internship</div>
       </div>
-      <div class="about-meta-item">
-        <span class="about-meta-label">Location</span>
-        <span class="about-meta-val">Melbourne, FL · Relocate OK</span>
+      <div class="avail-cell">
+        <div class="avail-label">Location</div>
+        <div class="avail-val">Melbourne, FL · Relocate OK</div>
       </div>
     </div>
   </div>
 
   <div class="footer-bar">
-    <span class="footer-copy">© 2025 Aryaa Vijay · Aerospace Engineering · FIT</span>
-    <span class="footer-copy">Built from scratch · Hosted on GitHub Pages</span>
+    <span class="footer-text">© 2026 Aryaa Vijay · Aerospace Engineering · FIT</span>
+    <span class="footer-text">U.S. Citizen · Security Clearance Eligible</span>
   </div>
 </section>
 
-
-<!-- ============================================================
-     THREE.JS — Hero drone + project models
-     ============================================================ -->
+<!-- ═══════════════════════════════════════════════
+     THREE.JS — all models via JSDelivr CDN
+═══════════════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+// ── CDN paths (JSDelivr from your GitHub repo) ───────────────────────────
+const CDN       = 'https://cdn.jsdelivr.net/gh/Aryaa207/Portfolio@main/assets/';
+const SR71_URL  = CDN + 'lockheedsr-71%20(1).glb';
+const DRONE_URL = CDN + 'drone%203d%20model-holographic.glb';
+const MSL_URL   = CDN + 'missile.stl';
 
-// ── Shared lighting setup ──────────────────────────────────────────────────
-function setupLights(scene) {
-  scene.add(new THREE.AmbientLight(0xffffff, 0.2));
-  const key = new THREE.DirectionalLight(0xfff5e0, 2.0);
-  key.position.set(100, 120, 80);
-  scene.add(key);
-  const fill = new THREE.DirectionalLight(0x8ab4ff, 0.5);
-  fill.position.set(-80, -40, 100);
-  scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xffe0a0, 0.8);
-  rim.position.set(-60, 80, -120);
-  scene.add(rim);
+// ── Shared helpers ───────────────────────────────────────────────────────
+function mkRenderer(canvas, alpha) {
+  const r = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:!!alpha });
+  r.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  r.toneMapping = THREE.ACESFilmicToneMapping;
+  r.toneMappingExposure = 1.25;
+  if (!alpha) r.setClearColor(0x0d0d0d, 1);
+  return r;
 }
 
-// ── Parse binary STL ──────────────────────────────────────────────────────
-function parseBinarySTL(buffer) {
-  const geo = new THREE.BufferGeometry();
-  const view = new DataView(buffer);
-  const count = view.getUint32(80, true);
-  const pos = new Float32Array(count * 9);
-  const nor = new Float32Array(count * 9);
-  let off = 84;
-  for (let i = 0; i < count; i++) {
-    const nx = view.getFloat32(off,true), ny = view.getFloat32(off+4,true), nz = view.getFloat32(off+8,true);
-    off += 12;
-    for (let v = 0; v < 3; v++) {
-      const b = i*9+v*3;
-      pos[b]   = view.getFloat32(off,true);
-      pos[b+1] = view.getFloat32(off+4,true);
-      pos[b+2] = view.getFloat32(off+8,true);
-      nor[b]=nx; nor[b+1]=ny; nor[b+2]=nz;
-      off += 12;
+function sync(r, cam, el) {
+  const w = el.clientWidth, h = Math.max(el.clientHeight, 80);
+  if (r.domElement.width !== w*r.getPixelRatio() || r.domElement.height !== h*r.getPixelRatio()) {
+    r.setSize(w, h, false); cam.aspect = w/h; cam.updateProjectionMatrix();
+  }
+}
+
+function fit(obj, size) {
+  const b = new THREE.Box3().setFromObject(obj);
+  const s = new THREE.Vector3(); b.getSize(s);
+  obj.scale.setScalar(size / Math.max(s.x, s.y, s.z));
+  const b2 = new THREE.Box3().setFromObject(obj);
+  const c  = new THREE.Vector3(); b2.getCenter(c);
+  obj.position.sub(c);
+}
+
+function mat(hex, m, r) {
+  return new THREE.MeshStandardMaterial({ color:hex, metalness:m, roughness:r });
+}
+
+function parseSTL(buf) {
+  const g = new THREE.BufferGeometry();
+  const v = new DataView(buf);
+  const n = v.getUint32(80, true);
+  const p = new Float32Array(n*9), nr = new Float32Array(n*9);
+  let o = 84;
+  for (let i=0; i<n; i++) {
+    const nx=v.getFloat32(o,true),ny=v.getFloat32(o+4,true),nz=v.getFloat32(o+8,true); o+=12;
+    for (let j=0;j<3;j++) {
+      const b=i*9+j*3;
+      p[b]=v.getFloat32(o,true); p[b+1]=v.getFloat32(o+4,true); p[b+2]=v.getFloat32(o+8,true);
+      nr[b]=nx; nr[b+1]=ny; nr[b+2]=nz; o+=12;
     }
-    off += 2;
+    o+=2;
   }
-  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  geo.setAttribute('normal',   new THREE.BufferAttribute(nor,3));
-  return geo;
+  g.setAttribute('position', new THREE.BufferAttribute(p,3));
+  g.setAttribute('normal',   new THREE.BufferAttribute(nr,3));
+  return g;
 }
 
-// ── Build a renderer+scene for a canvas ──────────────────────────────────
-function makeScene(canvas, bgAlpha) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: !!bgAlpha });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
-  const scene = new THREE.Scene();
-  if (!bgAlpha) scene.background = new THREE.Color(0x111318);
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 10000);
-  return { renderer, scene, camera };
+// Wireframe fallback — shows a spinning placeholder if GLB fails to load
+function addWireframeFallback(scene, size, color) {
+  const geo = new THREE.IcosahedronGeometry(size * 0.38, 1);
+  const wf  = new THREE.WireframeGeometry(geo);
+  const line = new THREE.LineSegments(wf, new THREE.LineBasicMaterial({ color, opacity:0.3, transparent:true }));
+  scene.add(line);
+  return line;
 }
 
-// ── Resize helper ──────────────────────────────────────────────────────────
-function setSize(renderer, camera, canvas) {
-  const w = canvas.clientWidth, h = canvas.clientHeight;
-  if (renderer.domElement.width !== w || renderer.domElement.height !== h) {
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-}
-
-// ── Metallic material ──────────────────────────────────────────────────────
-function metalMat(color=0x8fa0aa, metalness=0.8, roughness=0.25) {
-  return new THREE.MeshStandardMaterial({ color, metalness, roughness });
-}
-
-// ── Center + scale geometry ───────────────────────────────────────────────
-function fitGeo(geo, targetSize) {
-  geo.computeBoundingBox();
-  const bb = geo.boundingBox;
-  const sz = new THREE.Vector3();
-  bb.getSize(sz);
-  const maxDim = Math.max(sz.x, sz.y, sz.z);
-  return targetSize / maxDim;
-}
-
-// ── Mouse tracking ────────────────────────────────────────────────────────
-let mouseX = 0, mouseY = 0;
-window.addEventListener('mousemove', e => {
-  mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
-  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+let mx=0, my=0;
+window.addEventListener('mousemove', e=>{
+  mx=(e.clientX/window.innerWidth-.5)*2;
+  my=(e.clientY/window.innerHeight-.5)*2;
 });
 
-// ============================================================
-// HERO — GLB Drone
-// ============================================================
+// ── Load GLTFLoader once ─────────────────────────────────────────────────
+const gltfReady = new Promise((res,rej)=>{
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
+  s.onload=res; s.onerror=rej;
+  document.head.appendChild(s);
+});
+
+// ══════════════════════════════════════════════
+// HERO — SR-71 Blackbird
+// ══════════════════════════════════════════════
 (function heroScene() {
   const canvas = document.getElementById('hero-canvas');
-  const { renderer, scene, camera } = makeScene(canvas, true);
-  setupLights(scene);
-  camera.position.set(0, 30, 300);
-  camera.lookAt(0, 0, 0);
+  if (!canvas) return;
 
-  let drone = null;
+  const r  = mkRenderer(canvas, true);
+  const sc = new THREE.Scene();
 
-  // GLB loader (Three.js r128 has GLTFLoader separately, use import pattern)
-  const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
-  script.onload = () => {
-    const loader = new THREE.GLTFLoader();
-    loader.load('./assets/drone.glb',
-      gltf => {
-        drone = gltf.scene;
-        const s = fitGeo(new THREE.Box3().setFromObject(drone), 160);
-        drone.scale.setScalar(s);
-        // Center
-        const box = new THREE.Box3().setFromObject(drone);
-        const center = new THREE.Vector3();
-        box.getCenter(center);
-        drone.position.sub(center);
-        drone.position.y -= 10;
-        // Apply metallic look to all meshes
-        drone.traverse(child => {
-          if (child.isMesh) {
-            child.material = metalMat(0x7a8c96, 0.7, 0.35);
-            child.castShadow = true;
-          }
+  // Hero lighting — dramatic side-lit
+  sc.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const key = new THREE.DirectionalLight(0xffffff, 3.5);
+  key.position.set(150, 80, 120); sc.add(key);
+  const fill = new THREE.DirectionalLight(0xddeeff, 2.0);
+  fill.position.set(-100, -20, 100); sc.add(fill);
+  const rim = new THREE.DirectionalLight(0xffd060, 1.5);
+  rim.position.set(-80, 100, -150); sc.add(rim);
+  const back = new THREE.DirectionalLight(0x6090ff, 0.8);
+  back.position.set(0, -10, -200); sc.add(back);
+
+  const cam = new THREE.PerspectiveCamera(34, 1, 0.1, 10000);
+  cam.position.set(0, 20, 340); cam.lookAt(0,0,0);
+
+  let plane = null;
+  let fallback = null;
+
+  gltfReady.then(()=>{
+    new THREE.GLTFLoader().load(
+      SR71_URL,
+      gltf=>{
+        if (fallback) { sc.remove(fallback); fallback=null; }
+        plane = gltf.scene;
+        plane.traverse(c=>{
+          if (!c.isMesh) return;
+          c.material = new THREE.MeshStandardMaterial({
+            color:0xb0bec5, metalness:0.85, roughness:0.18
+          });
         });
-        scene.add(drone);
+        fit(plane, 220);
+        plane.rotation.x =  0.06;
+        plane.rotation.z = -0.03;
+        sc.add(plane);
       },
-      undefined,
-      err => console.warn('GLB load error:', err)
+      null,
+      ()=>{ fallback = addWireframeFallback(sc, 220, 0x334466); }
     );
-  };
-  document.head.appendChild(script);
+  });
 
-  let frame = 0;
-  function animate() {
-    requestAnimationFrame(animate);
-    frame++;
-    setSize(renderer, camera, canvas);
-    if (drone) {
-      drone.rotation.y += 0.003;
-      drone.rotation.x = mouseY * 0.05;
-      drone.rotation.z = mouseX * 0.03;
-      drone.position.y = -10 + Math.sin(frame * 0.007) * 5;
-    }
-    renderer.render(scene, camera);
+  // ── Drag to rotate ──────────────────────────────
+  let dragging = false;
+  let lastX = 0, lastY = 0;
+  let rotY = 0, rotX = 0.06;
+  let velY = 0.0015;
+  let userRotating = false;
+  let idleTimer = null;
+
+  const heroEl = document.getElementById('hero');
+
+  function onDown(x, y) {
+    dragging = true;
+    userRotating = true;
+    lastX = x; lastY = y;
+    velY = 0;
+    clearTimeout(idleTimer);
+    heroEl.style.cursor = 'grabbing';
   }
-  animate();
+  function onMove(x, y) {
+    if (!dragging || !plane) return;
+    const dx = x - lastX;
+    const dy = y - lastY;
+    rotY += dx * 0.008;
+    rotX += dy * 0.005;
+    rotX = Math.max(-0.6, Math.min(0.6, rotX));
+    velY  = dx * 0.008;
+    lastX = x; lastY = y;
+  }
+  function onUp() {
+    dragging = false;
+    heroEl.style.cursor = 'grab';
+    idleTimer = setTimeout(()=>{ userRotating = false; velY = 0.0015; }, 2000);
+  }
+
+  heroEl.addEventListener('mousedown',  e=>onDown(e.clientX, e.clientY));
+  heroEl.addEventListener('mousemove',  e=>onMove(e.clientX, e.clientY));
+  heroEl.addEventListener('mouseup',    onUp);
+  heroEl.addEventListener('mouseleave', onUp);
+  heroEl.addEventListener('touchstart', e=>{ e.preventDefault(); onDown(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
+  heroEl.addEventListener('touchmove',  e=>{ e.preventDefault(); onMove(e.touches[0].clientX, e.touches[0].clientY); }, {passive:false});
+  heroEl.addEventListener('touchend',   onUp);
+
+  heroEl.style.cursor = 'grab';
+
+  let f=0;
+  (function tick(){
+    requestAnimationFrame(tick); f++;
+    sync(r, cam, canvas);
+    if (plane) {
+      if (!dragging) {
+        rotY += velY;
+        // Dampen momentum toward auto-rotate speed
+        if (!userRotating) velY += (0.0015 - velY) * 0.02;
+      }
+      plane.rotation.y = rotY;
+      plane.rotation.x = rotX;
+      plane.rotation.z = -0.03 + mx*0.018;
+      plane.position.y = Math.sin(f*0.005)*5;
+    }
+    if (fallback) { fallback.rotation.y += 0.004; fallback.rotation.x += 0.002; }
+    r.render(sc, cam);
+  })();
 })();
 
-// ============================================================
-// PROJECT CANVAS — STL loader helper
-// ============================================================
-function makeSTLScene(canvasId, stlPath, rotInit, camPos, color) {
-  const canvas = document.getElementById(canvasId);
+// ══════════════════════════════════════════════
+// PROJECT: Drone GLB
+// ══════════════════════════════════════════════
+function startDrone() {
+  const canvas = document.getElementById('canvas-drone');
   if (!canvas) return;
-  const { renderer, scene, camera } = makeScene(canvas, false);
-  setupLights(scene);
-  camera.position.set(...camPos);
-  camera.lookAt(0, 0, 0);
 
-  let mesh = null;
+  const r  = mkRenderer(canvas, false);
+  const sc = new THREE.Scene();
 
-  fetch(stlPath)
-    .then(r => r.arrayBuffer())
-    .then(buf => {
-      const geo = parseBinarySTL(buf);
-      geo.computeVertexNormals();
-      geo.center();
-      const s = fitGeo(geo, 120);
-      mesh = new THREE.Mesh(geo, metalMat(color, 0.82, 0.22));
-      mesh.scale.setScalar(s);
-      mesh.rotation.x = rotInit[0];
-      mesh.rotation.y = rotInit[1];
-      mesh.rotation.z = rotInit[2];
-      scene.add(mesh);
-    })
-    .catch(e => console.warn(stlPath, e));
+  sc.add(new THREE.AmbientLight(0xffffff, 1.2));
+  // Main spotlight from above
+  const spot = new THREE.SpotLight(0xffffff, 6.0);
+  spot.position.set(0, 300, 100);
+  spot.target.position.set(0, 0, 0);
+  spot.angle = Math.PI / 4;
+  spot.penumbra = 0.3;
+  spot.decay = 0.5;
+  spot.distance = 900;
+  sc.add(spot); sc.add(spot.target);
+  // Front fill
+  const front = new THREE.DirectionalLight(0xffffff, 2.5);
+  front.position.set(0, 50, 200); sc.add(front);
+  // Left fill
+  const left = new THREE.DirectionalLight(0xffffff, 2.0);
+  left.position.set(-200, 0, 100); sc.add(left);
+  // Right fill
+  const right = new THREE.DirectionalLight(0xffffff, 2.0);
+  right.position.set(200, 0, 100); sc.add(right);
 
-  let f = 0;
-  function animate() {
-    requestAnimationFrame(animate);
-    f++;
-    setSize(renderer, camera, canvas);
-    if (mesh) {
-      mesh.rotation.y += 0.004;
-      mesh.position.y = Math.sin(f * 0.008) * 3;
-    }
-    renderer.render(scene, camera);
-  }
-  animate();
+  const cam = new THREE.PerspectiveCamera(40,1,0.1,5000);
+  cam.position.set(0,30,260); cam.lookAt(0,0,0);
+
+  let drone=null, fb=null;
+
+  gltfReady.then(()=>{
+    new THREE.GLTFLoader().load(
+      DRONE_URL,
+      gltf=>{
+        if(fb){sc.remove(fb);fb=null;}
+        drone=gltf.scene;
+        drone.traverse(c=>{ 
+          if(!c.isMesh) return;
+          // Keep original GLB materials untouched
+          if(Array.isArray(c.material)) c.material.forEach(m=>{ m.needsUpdate=true; });
+          else if(c.material) c.material.needsUpdate=true;
+        });
+        fit(drone, 140); drone.position.y-=8; sc.add(drone);
+      },
+      null,
+      ()=>{ fb=addWireframeFallback(sc,140,0x334455); }
+    );
+  });
+
+  let f=0;
+  (function tick(){
+    requestAnimationFrame(tick); f++;
+    sync(r,cam,canvas);
+    if(drone){ drone.rotation.y+=0.004; drone.position.y=-8+Math.sin(f*.008)*4; }
+    if(fb){ fb.rotation.y+=0.005; fb.rotation.x+=0.002; }
+    r.render(sc,cam);
+  })();
 }
 
-// Load project models when they scroll into view
-const modelQueue = [
-  { id: 'canvas-missile', path: './assets/missile.stl', rot: [0.1, 0, 0.05], cam: [0, 20, 220], color: 0x8a9ea8 },
-  { id: 'canvas-sr71',    path: './assets/sr71.stl',    rot: [0.08, 0.4, 0], cam: [0, 40, 240], color: 0x6b7a82 },
-];
+// ══════════════════════════════════════════════
+// PROJECT: Missile STL — heavily lit
+// ══════════════════════════════════════════════
+function startMissile() {
+  const canvas = document.getElementById('canvas-missile');
+  if (!canvas) return;
 
-let modelsLoaded = false;
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting && !modelsLoaded) {
-      modelsLoaded = true;
-      modelQueue.forEach(m => makeSTLScene(m.id, m.path, m.rot, m.cam, m.color));
-    }
+  const r  = mkRenderer(canvas, false);
+  const sc = new THREE.Scene();
+
+  // Much more dramatic lighting for the missile
+  sc.add(new THREE.AmbientLight(0xffffff, 0.35));
+  // Bright top-front key
+  const k1 = new THREE.DirectionalLight(0xffffff, 3.5);
+  k1.position.set(80, 120, 100); sc.add(k1);
+  // Strong left fill
+  const k2 = new THREE.DirectionalLight(0xe0eeff, 2.0);
+  k2.position.set(-120, 60, 80); sc.add(k2);
+  // Hot rim from below-right
+  const k3 = new THREE.DirectionalLight(0xffd080, 1.8);
+  k3.position.set(100, -80, -60); sc.add(k3);
+  // Subtle blue back
+  const k4 = new THREE.DirectionalLight(0x4080ff, 0.8);
+  k4.position.set(-40, 20, -150); sc.add(k4);
+  // Specular pop from top
+  const k5 = new THREE.PointLight(0xffffff, 2.0, 600);
+  k5.position.set(0, 200, 60); sc.add(k5);
+
+  const cam = new THREE.PerspectiveCamera(38,1,0.1,5000);
+  cam.position.set(0,20,200); cam.lookAt(0,0,0);
+
+  fetch(MSL_URL)
+    .then(res=>{ if(!res.ok) throw res.status; return res.arrayBuffer(); })
+    .then(buf=>{
+      const geo = parseSTL(buf);
+      geo.computeVertexNormals();
+      const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+        color: 0xaabbc8,
+        metalness: 0.90,
+        roughness: 0.10,
+        envMapIntensity: 1.0,
+      }));
+      mesh.rotation.x = 0.1;
+      fit(mesh, 120);
+      sc.add(mesh);
+      let f=0;
+      (function tick(){
+        requestAnimationFrame(tick); f++;
+        sync(r,cam,canvas);
+        mesh.rotation.y+=0.005;
+        mesh.position.y=Math.sin(f*.008)*3;
+        r.render(sc,cam);
+      })();
+    })
+    .catch(e=>console.warn('Missile STL fetch failed — check GitHub assets folder:', e));
+}
+
+// ── Lazy-load on scroll ──────────────────────────────────────────────────
+const done = new Set();
+function go(id){
+  if(done.has(id)) return; done.add(id);
+  if(id==='proj-1') startDrone();
+  if(id==='proj-2') startMissile();
+}
+['proj-1','proj-2'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(!el) return;
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) go(id); });
+  },{threshold:0.1}).observe(el);
+});
+
+// ── Scroll reveal ────────────────────────────────────────────────────────
+const rv = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); rv.unobserve(e.target); }
   });
-}, { threshold: 0.1 });
-
-const missileRow = document.getElementById('proj-2');
-if (missileRow) observer.observe(missileRow);
-
-// ============================================================
-// SCROLL REVEAL for project rows
-// ============================================================
-const rowObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      rowObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll('.project-row').forEach(r => rowObserver.observe(r));
-
+},{threshold:0.08});
+document.querySelectorAll('.prow').forEach(r=>rv.observe(r));
 </script>
 </body>
 </html>
